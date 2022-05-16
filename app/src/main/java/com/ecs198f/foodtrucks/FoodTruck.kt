@@ -10,6 +10,7 @@ import java.time.format.DateTimeFormatter
 @Parcelize
 @Entity
 data class FoodTruck(
+
     val id: String,
     val name: String,
     val imageUrl: String,
@@ -20,6 +21,8 @@ data class FoodTruck(
 ): Parcelable {
     val formattedTimeInterval: String
         get() = "${openTime.format(timeOnlyFormatter)} - ${closeTime.format(dateTimeFormatter)}"
+
+    @PrimaryKey(autoGenerate = true) var key: Int = 0
 
     companion object {
         private val timeOnlyFormatter: DateTimeFormatter =
