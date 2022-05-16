@@ -11,7 +11,7 @@ interface TruckDao {
     // each function represents a query to the database
 
     // get all trucks in the database
-    @Query("SELECT * FROM FoodTruck")
+    @Query("SELECT * FROM FoodTruck ORDER BY id")
     suspend fun listAllTrucks() : List<FoodTruck>
 
     @Query("SELECT * FROM FoodTruck WHERE priceLevel=:type")

@@ -13,11 +13,13 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.reflect.Type
 import java.time.LocalDateTime
 
+
+
 class MainActivity : AppCompatActivity() {
 
-    private val db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "app-db").build()
-    private val TruckDao = db.truckDao()
-    private val ItemDao = db.itemDao()
+    lateinit var db: AppDatabase
+    lateinit var TruckDao : TruckDao
+    lateinit var ItemDao : ItemDao
 
     private val gson = GsonBuilder()
         .registerTypeAdapter(LocalDateTime::class.java, object : JsonDeserializer<LocalDateTime> {
@@ -43,5 +45,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         title = "Food Trucks"
+        db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "app-db")
+            .build()
+        TruckDao = db.truckDao()
+        ItemDao = db.itemDao()
+
     }
 }
