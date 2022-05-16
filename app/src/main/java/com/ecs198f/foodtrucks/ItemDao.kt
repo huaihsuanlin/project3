@@ -12,7 +12,7 @@ interface ItemDao {
     suspend fun listAllItems() : List<FoodItem>
 
     @Query("SELECT * FROM FoodItem WHERE truckId=:truckID")
-    suspend fun listAllItemsByTruck(truckID: Int): List<FoodItem>
+    suspend fun listAllItemsByTruck(truckID: String): List<FoodItem>
 
     @Insert
     suspend fun addFoodItem(item: FoodItem)
@@ -22,4 +22,7 @@ interface ItemDao {
 
     @Delete
     suspend fun delFoodItem(item: FoodItem)
+
+    @Query("DELETE FROM FoodItem WHERE truckId=:truckID")
+    suspend fun delTruckItems(truckID: String)
 }

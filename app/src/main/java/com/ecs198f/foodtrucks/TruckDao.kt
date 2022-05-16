@@ -29,7 +29,7 @@ interface TruckDao {
     @Insert
     suspend fun addTrucks(trucks: List<FoodTruck>)
 
-    @Delete
-    suspend fun deleteTruck(foodTruck: FoodTruck)
+    @Query("DELETE FROM FoodTruck")
+    suspend fun deleteTrucks()
 
 }

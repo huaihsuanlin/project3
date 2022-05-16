@@ -38,13 +38,14 @@ class FoodTruckListFragment : Fragment() {
                     response: Response<List<FoodTruck>>
                 ) {
                     recyclerViewAdapter.updateItems(response.body()!!)
-                    Log.e("response", response.body().toString()!!)
+                    Log.i("response", response.body().toString()!!)
 
                     var list : List<FoodTruck>
                     lifecycleScope.launch {
+                        TruckDao.deleteTrucks()
                         TruckDao.addTrucks(response.body()!!)
                         list = TruckDao.listAllTrucks()
-                        Log.e("db list", list.toString())
+                        Log.i("db truck list", list.toString())
 
                     }
 
