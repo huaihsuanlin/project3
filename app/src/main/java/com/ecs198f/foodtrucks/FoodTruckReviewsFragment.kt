@@ -36,7 +36,6 @@ class FoodTruckReviewsFragment(private var args: FoodTruckDetailFragmentArgs) : 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        view.findViewById<TextView>(R.id.testing2).text = "Yeah"
 
         val recyclerViewAdapter = ReviewListRecyclerViewAdapter(listOf())
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -44,7 +43,8 @@ class FoodTruckReviewsFragment(private var args: FoodTruckDetailFragmentArgs) : 
             .requestEmail()
             .build()
         val account = GoogleSignIn.getLastSignedInAccount(view.context)
-//        updateUI(account)
+        updateUI(account)
+
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(view.context, gso)
 
@@ -56,10 +56,16 @@ class FoodTruckReviewsFragment(private var args: FoodTruckDetailFragmentArgs) : 
             view.findViewById<Button>(R.id.signin_button).setOnClickListener{
                 signin()
             }
-//            view.findViewById<Button>(R.id.signin_button).visibility = View.INVISIBLE
+            // get the user input
+            view.findViewById<Button>(R.id.enter_button).setOnClickListener {
+                val userinput = view.findViewById<TextInputEditText>(R.id.userInput).text
+                //TODO: post request
+
+            }
+
 
             (requireActivity() as MainActivity).apply {
-//                title = it.name
+
                 foodTruckService.listReviews(it.id).enqueue(object : Callback<List<Review>> {
                     override fun onResponse(
                         call: Call<List<Review>>,
@@ -110,20 +116,18 @@ class FoodTruckReviewsFragment(private var args: FoodTruckDetailFragmentArgs) : 
         }
     }
 
-    private fun updateUI(hadsignIn: GoogleSignInAccount?) {
-        view?.findViewById<Button>(R.id.signin_button)?.visibility = View.INVISIBLE
-        view?.findViewById<TextInputLayout>(R.id.textInputLayout)?.visibility = View.VISIBLE
-        view?.findViewById<TextInputEditText>(R.id.userInput)?.visibility = View.VISIBLE
-//        if(hadsignIn != null){ // already sign-in
-//            view?.findViewById<Button>(R.id.signin_button)?.visibility = View.INVISIBLE
-//            view?.findViewById<TextInputLayout>(R.id.textInputLayout)?.visibility = View.VISIBLE
-//            view?.findViewById<TextInputEditText>(R.id.userInput)?.visibility = View.VISIBLE
-//        }
-//        else{
-//            view?.findViewById<Button>(R.id.signin_button)?.visibility = View.VISIBLE
-//            view?.findViewById<TextInputLayout>(R.id.textInputLayout)?.visibility = View.INVISIBLE
-//            view?.findViewById<TextInputEditText>(R.id.userInput)?.visibility = View.INVISIBLE
-//        }
+    private fun updateUI(account: GoogleSignInAccount?) {
+        if(account != null){ // already sign-in
+            view?.findViewById<Button>(R.id.signin_button)?.visibility = View.INVISIBLE
+            view?.findViewById<TextInputLayout>(R.id.textInputLayout)?.visibility = View.VISIBLE
+            view?.findViewById<TextInputEditText>(R.id.userInput)?.visibility = View.VISIBLE
+
+        }
+        else{
+            view?.findViewById<Button>(R.id.signin_button)?.visibility = View.VISIBLE
+            view?.findViewById<TextInputLayout>(R.id.textInputLayout)?.visibility = View.INVISIBLE
+            view?.findViewById<TextInputEditText>(R.id.userInput)?.visibility = View.INVISIBLE
+        }
 
     }
 
