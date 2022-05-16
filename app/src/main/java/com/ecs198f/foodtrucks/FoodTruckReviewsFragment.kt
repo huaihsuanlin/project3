@@ -56,14 +56,12 @@ class FoodTruckReviewsFragment(private var args: FoodTruckDetailFragmentArgs) : 
             view.findViewById<Button>(R.id.signin_button).setOnClickListener{
                 signin()
             }
-            // get the user input
             view.findViewById<Button>(R.id.enter_button).setOnClickListener {
-                val userinput = view.findViewById<TextInputEditText>(R.id.userInput).text
+
                 //TODO: post request
+                postRequest(account!!, recyclerViewAdapter)
 
             }
-
-
             (requireActivity() as MainActivity).apply {
 
                 foodTruckService.listReviews(it.id).enqueue(object : Callback<List<Review>> {
@@ -79,8 +77,59 @@ class FoodTruckReviewsFragment(private var args: FoodTruckDetailFragmentArgs) : 
                     }
                 })
             }
+
+
+
         }
     }
+
+    private fun postRequest(account: GoogleSignInAccount, recyclerViewAdapter: ReviewListRecyclerViewAdapter) {
+        args.foodTruck.let {
+            val input_content = view?.findViewById<TextInputEditText>(R.id.userInput)?.text
+            val token = "Bearer " + account.idToken.toString()
+
+            val review = Review(
+                authorAvatarUrl = account.photoUrl.toString(),
+                authorName = account.displayName.toString(),
+                content = input_content.toString())
+            Log.d("account name: ", account.displayName.toString())
+            Log.d("account avatar: ", account.photoUrl.toString())
+            Log.d("account content: ", input_content.toString())
+
+
+            (requireActivity() as MainActivity).apply{
+                foodTruckService.createFoodReview(token, it.id, review).enqueue(object : Callback<Unit>{
+                    override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
+                        (requireActivity() as MainActivity).apply {
+
+                            foodTruckService.listReviews(it.id).enqueue(object : Callback<List<Review>> {
+                                override fun onResponse(
+                                    call: Call<List<Review>>,
+                                    response: Response<List<Review>>
+                                ) {
+                                    recyclerViewAdapter.updateReviews(response.body()!!)
+                                    Log.d("TEST RESULT", "updated");
+                                    Log.d("TEST RESULT", response.body()!!.toString());
+                                }
+
+                                override fun onFailure(call: Call<List<Review>>, t: Throwable) {
+                                    throw t
+                                }
+                            })
+                        }
+                        Log.d("TEST RESULT", token)
+                        Log.d("TEST RESULT", review.toString())
+                    }
+
+                    override fun onFailure(call: Call<Unit>, t: Throwable) {
+                        throw t
+                    }
+
+                })
+            }
+        }
+    }
+
 
     private fun signin() {
         val signInIntent = mGoogleSignInClient.signInIntent
@@ -117,16 +166,19 @@ class FoodTruckReviewsFragment(private var args: FoodTruckDetailFragmentArgs) : 
     }
 
     private fun updateUI(account: GoogleSignInAccount?) {
-        if(account != null){ // already sign-in
+        if(account != null){ //  sign-in
             view?.findViewById<Button>(R.id.signin_button)?.visibility = View.INVISIBLE
             view?.findViewById<TextInputLayout>(R.id.textInputLayout)?.visibility = View.VISIBLE
             view?.findViewById<TextInputEditText>(R.id.userInput)?.visibility = View.VISIBLE
+
+            Log.d("good", account.displayName.toString())
 
         }
         else{
             view?.findViewById<Button>(R.id.signin_button)?.visibility = View.VISIBLE
             view?.findViewById<TextInputLayout>(R.id.textInputLayout)?.visibility = View.INVISIBLE
             view?.findViewById<TextInputEditText>(R.id.userInput)?.visibility = View.INVISIBLE
+            Log.d("warning", "need to sign in")
         }
 
     }

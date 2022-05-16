@@ -13,9 +13,9 @@ interface FoodTruckService {
     @GET("food-trucks/{truckId}/reviews")
     fun listReviews(@Path("truckId") truckId: String): Call<List<Review>>
 
-    @POST("/food-trucks/{truckId}/reviews")
-    fun createFoodReview(@Header("authorHeader") authorHeader: String,
-                         @Path("truckId") truckId: String,
+    @POST("/food-trucks/{id}/reviews")
+    fun createFoodReview(@Header("Authorization") authHeader: String,
+                         @Path("id") truckId: String,
                          @Body reviewContent: Review,
     ): Call<Unit>
 
