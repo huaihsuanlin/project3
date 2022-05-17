@@ -1,7 +1,11 @@
 package com.ecs198f.foodtrucks
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.room.Room
 import com.ecs198f.foodtrucks.databinding.ActivityMainBinding
 import com.google.gson.GsonBuilder
@@ -51,4 +55,6 @@ class MainActivity : AppCompatActivity() {
         ItemDao = db.itemDao()
 
     }
+
+
 }
